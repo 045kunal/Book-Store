@@ -3,50 +3,55 @@ import { useAuth } from "../contexts/AuthProvider";
 
 const Cart = () => {
   const { user } = useAuth();
-  //   const [cart, setCart] = useState([]);
 
-  const [cart, setCart] = useState(
-    JSON.parse(localStorage.getItem("cart")) || []
-  );
+  const getUserId = () => {
+    const userid = user.userid;
+    return userid;
+  };
 
-  //   useEffect(() => {
-  //     const storedCart = localStorage.getItem(`cart_${user?.username}`);
+  const getCartKey = () => {
+    const userid = getUserId();
+    return `cart_${userid}`;
+  };
 
-  //     if (storedCart) {
-  //       setCart(JSON.parse(storedCart));
-  //     }
-
-  //   }, [user]);
-
+  const getCart = () => {
+    const cartKey = getCartKey();
+    const cartWithCartKey = JSON.parse(localStorage.getItem(cartKey)) || [];
+    return cartWithCartKey;
+  };
   const handleDecreaseQuantity = (itemId) => {
-    const updatedCart = cart.map((item) => {
-      if (item.id === itemId && item.quantity > 1) {
+    const cartWithCartKey = getCart();
+
+    const updatedCart = cartWithCartKey?.map((item) => {
+      if (item._id === itemId && item.quantity < item.inventory - 1) {
         return { ...item, quantity: item.quantity - 1 };
       }
       return item;
     });
 
-    setCart(updatedCart);
-    localStorage.setItem(`cart_${user?.username}`, JSON.stringify(updatedCart));
+    localStorage.setItem(`cartWithCartKey`, JSON.stringify(updatedCart));
   };
 
   const handleIncreaseQuantity = (itemId) => {
-    const updatedCart = cart.map((item) => {
-      if (item.id === itemId && item.quantity < item.inventory - 1) {
+    const cartWithCartKey = getCart();
+    console.log("cartWithCartKey: ", cartWithCartKey);
+
+    const updatedCart = cartWithCartKey?.map((item) => {
+      if (item._id === itemId && item.quantity < item.inventory - 1) {
         return { ...item, quantity: item.quantity + 1 };
       }
       return item;
     });
 
-    setCart(updatedCart);
-    localStorage.setItem(`cart_${user?.username}`, JSON.stringify(updatedCart));
+    localStorage.setItem(`cartWithCartKey`, JSON.stringify(updatedCart));
   };
 
   const handleRemoveItem = (itemId) => {
-    const updatedCart = cart.filter((item) => item.id !== itemId);
+    const cartWithCartKey = getCart();
 
-    setCart(updatedCart);
-    localStorage.setItem(`cart_${user?.username}`, JSON.stringify(updatedCart));
+    const updatedCart = cartWithCartKey.filter((item) => item._id !== itemId);
+
+    localStorage.setItem(`cartWithCartKey`, JSON.stringify(updatedCart));
   };
 
   const totalAmount = cart.reduce(
@@ -73,18 +78,18 @@ const Cart = () => {
                 <p>Author: {item.authors}</p>
                 <p>Price: {item.price}$</p>
                 <div className="flex items-center space-x-4 mt-2">
-                  <button onClick={() => handleDecreaseQuantity(item.id)}>
+                  <button onClick={() => handleDecreaseQuantity(item._id)}>
                     -
                   </button>
                   <span>{item.quantity}</span>
-                  <button onClick={() => handleIncreaseQuantity(item.id)}>
+                  <button onClick={() => handleIncreaseQuantity(item._id)}>
                     +
                   </button>
                 </div>
               </div>
               <div>
                 <p className="font-semibold">${item.price * item.quantity}</p>
-                <button onClick={() => handleRemoveItem(item.id)}>
+                <button onClick={() => handleRemoveItem(item._id)}>
                   Remove
                 </button>
               </div>

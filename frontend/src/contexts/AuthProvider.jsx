@@ -23,7 +23,8 @@ const AuthProvider = ({ children }) => {
       const decodedCookie = jwtDecode(AdminCookieValue || CustomerCookieValue);
       const username = decodedCookie.username;
       const role = decodedCookie.role;
-      setUser({ username, role });
+      const userid = decodedCookie.id;
+      setUser({ userid, username, role });
     }
     setLoading(false);
   }, [cookies]);
@@ -32,7 +33,8 @@ const AuthProvider = ({ children }) => {
     const DecodedToken = jwtDecode(jwt_authorizationToken);
     const role = DecodedToken.role;
     const username = DecodedToken.username;
-    setUser({ username, role });
+    const userid = DecodedToken.id;
+    setUser({ userid, username, role });
     if (role === "customer") {
       setCookie("customer_access", jwt_authorizationToken, {
         path: "/",
