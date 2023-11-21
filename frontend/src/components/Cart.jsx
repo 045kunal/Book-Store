@@ -62,18 +62,16 @@ const Cart = () => {
       ) : (
         <div>
           {cart.map((item) => (
-            <div
-              key={item.id}
-              className="flex items-center border-b border-gray-200 p-4"
-            >
+            <div key={item.id} className="flex border-b border-gray-200 p-4">
               <img
                 src={item.imageLink}
                 alt={item.title}
-                className="w-16 h-16 object-cover mr-4"
+                className="w-20 h-32 object-cover mr-4"
               />
               <div className="flex-1">
                 <h2 className="text-lg font-semibold">{item.title}</h2>
                 <p>Author: {item.authors}</p>
+                <p>Price: {item.price}$</p>
                 <div className="flex items-center space-x-4 mt-2">
                   <button onClick={() => handleDecreaseQuantity(item.id)}>
                     -
