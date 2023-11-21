@@ -3,10 +3,11 @@ import { useAuth } from "../contexts/AuthProvider";
 
 const Cart = () => {
   const { user } = useAuth();
+  const [cart, setCart] = useState([]);
 
   const getUserId = () => {
-    const userid = user.userid;
-    return userid;
+    const userId = user.userid;
+    return userId;
   };
 
   const getCartKey = () => {
@@ -17,49 +18,49 @@ const Cart = () => {
   const getCart = () => {
     const cartKey = getCartKey();
     const cartWithCartKey = JSON.parse(localStorage.getItem(cartKey)) || [];
+    setCart(cartWithCartKey);
     return cartWithCartKey;
   };
 
   const handleDecreaseQuantity = (itemId) => {
-    const cartWithCartKey = getCart();
-
-    const updatedCart = cartWithCartKey?.map((item) => {
+    const updatedCart = cart.map((item) => {
       if (item._id === itemId && item.quantity > 1) {
         return { ...item, quantity: item.quantity - 1 };
       }
       return item;
     });
 
-    localStorage.setItem(getCartKey(), JSON.stringify(updatedCart));
+    updateCart(updatedCart);
   };
 
   const handleIncreaseQuantity = (itemId) => {
-    const cartWithCartKey = getCart();
-
-    const updatedCart = cartWithCartKey?.map((item) => {
-      if (item._id === itemId && item.quantity < item.inventory) {
+    const updatedCart = cart.map((item) => {
+      if (item._id === itemId && item.quantity < item.inventory - 1) {
         return { ...item, quantity: item.quantity + 1 };
       }
       return item;
     });
 
-    localStorage.setItem(getCartKey(), JSON.stringify(updatedCart));
+    updateCart(updatedCart);
   };
 
   const handleRemoveItem = (itemId) => {
-    const cartWithCartKey = getCart();
-
-    const updatedCart = cartWithCartKey.filter((item) => item._id !== itemId);
-
-    localStorage.setItem(getCartKey(), JSON.stringify(updatedCart));
+    const updatedCart = cart.filter((item) => item._id !== itemId);
+    updateCart(updatedCart);
   };
 
-  const cart = getCart();
+  const updateCart = (updatedCart) => {
+    const userId = getUserId();
+    const cartKey = `cart_${userId}`;
+    localStorage.setItem(cartKey, JSON.stringify(updatedCart));
+    setCart(updatedCart);
+  };
+
   const totalAmount = cart.reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
-
+  
   const goToPayment = () => {
     // Implement your logic to navigate to the payment page
   };
