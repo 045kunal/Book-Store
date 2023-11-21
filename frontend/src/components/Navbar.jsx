@@ -5,6 +5,7 @@ import { FaXmark, FaBars, FaBarsStaggered, FaBlog } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import Signup from "./Signup";
 import Login from "./Login";
+import { useAuth } from "../contexts/AuthProvider";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -36,6 +37,8 @@ const Navbar = () => {
     { link: "Shop", path: "/shop" },
     { link: "Contact Us", path: "/contactus" },
   ];
+
+  const { user, isLoggedIn } = useAuth();
   return (
     <header className="w-full bg-transparent fixed top-0 left-0 right-0 transition-all ease-in duration-300">
       <nav
@@ -49,43 +52,76 @@ const Navbar = () => {
               to="/"
               className="text-2xl font-bold text-blue-700 flex items-center gap-2"
             >
-              <FaBlog className="inline-block" />
-              Books
+              <FaBlog className="inline-block" /> Books
             </Link>
           </div>
-          <div className="">
-            <ul className="md:flex space-x-12 hidden navitems">
-              {navItems.map(({ link, path }) => (
+          <ul className="md:flex space-x-12 hidden items-center">
+            {navItems.map(({ link, path }) => (
+              <Link
+                key={link}
+                to={path}
+                className="link block text-base cursor-pointer uppercase text-black hover:text-blue-700"
+              >
+                {link}
+              </Link>
+            ))}
+            {!isLoggedIn && (
+              <>
                 <Link
-                  key={link}
-                  to={path}
-                  className="link block text-base cursor-pointer uppercase text-black hover:text-blue-700"
+                  to="/sign-up"
+                  className="bg-amber-200 p-2 pt-0.5 hover:bg-amber-100 me-3"
                 >
-                  {link}
+                  <span>Create Account</span>
                 </Link>
-              ))}
-
-              <Link
-                to="/sign-up"
-                className="bg-amber-200 p-2 pt-0.5 hover:bg-white me-3"
-              >
-                <span>Create Account</span>
-              </Link>
-              <Link
-                to="/login"
-                className="bg-stone-200 p-2 pt-0.5 hover:bg-white me-0"
-              >
-                <span>Login</span>
-              </Link>
-            </ul>
-
-            {/* <div className="space-x-12 hidden lg:flex items-center"> */}
-            {/* <button> */}
-            {/* {" "} */}
-            {/* <FaBarsStaggered className="w-5 hover:text-blue-700" /> */}
-            {/* </button> */}
-            {/* </div> */}
-          </div>
+                <Link
+                  to="/login"
+                  className="bg-stone-200 p-2 pt-0.5 hover:bg-stone-100 me-0"
+                >
+                  <span>Login</span>
+                </Link>
+              </>
+            )}
+            {isLoggedIn && (
+              <div className="relative group">
+                <div className="align-middle">
+                  <button
+                    onClick={toggleMenu}
+                    className="bg-white text-black p-2 rounded-full focus:outline-none"
+                  >
+                    <img src="/src/assets/user.png" className="h-5 w-5" />
+                  </button>
+                  <p>{user.username}</p>
+                </div>
+                <div
+                  className={`${
+                    isMenuOpen ? "block" : "hidden"
+                  } absolute top-10 right-0 space-y-2 bg-blue-700 p-2 rounded-md`}
+                >
+                  <Link
+                    to="/profile"
+                    className="block text-white hover:text-gray-500"
+                    onClick={toggleMenu}
+                  >
+                    Profile
+                  </Link>
+                  <Link
+                    to="/cart"
+                    className="block text-white hover:text-gray-500"
+                    onClick={toggleMenu}
+                  >
+                    Cart
+                  </Link>
+                  <Link
+                    to="/logout"
+                    className="block text-white hover:text-gray-500"
+                    onClick={toggleMenu}
+                  >
+                    Logout
+                  </Link>
+                </div>
+              </div>
+            )}
+          </ul>
           <div className="md:hidden">
             <button
               onClick={toggleMenu}
@@ -98,23 +134,6 @@ const Navbar = () => {
               )}
             </button>
           </div>
-        </div>
-
-        <div
-          className={`space-y-4 px-4 mt-16 py-7 bg-blue-700 ${
-            isMenuOpen ? "block fixed top-0 right-0 left-0" : "hidden"
-          }`}
-        >
-          {navItems.map(({ link, path }) => (
-            <a
-              href={path}
-              key={link}
-              onClick={toggleMenu}
-              className="block  text-white hover:text-gray-500"
-            >
-              {link}
-            </a>
-          ))}
         </div>
       </nav>
     </header>

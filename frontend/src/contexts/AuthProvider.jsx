@@ -17,13 +17,15 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     // const _user = localStorage.getItem("user");
-    const CookieValue = cookies.jwt;
-    if (CookieValue) {
-      const decodedCookie = jwtDecode(CookieValue);
+    const AdminCookieValue = cookies.admin_access;
+    const CustomerCookieValue = cookies.customer_access;
+    if (AdminCookieValue || CustomerCookieValue) {
+      const decodedCookie = jwtDecode(AdminCookieValue || CustomerCookieValue);
       const username = decodedCookie.username;
       const role = decodedCookie.role;
       setUser({ username, role });
     }
+    setLoading(false);
   }, [cookies]);
 
   const login = (jwt_authorizationToken) => {
@@ -31,8 +33,16 @@ const AuthProvider = ({ children }) => {
     const role = DecodedToken.role;
     const username = DecodedToken.username;
     setUser({ username, role });
-
-    setCookie("jwt", jwt_authorizationToken, { path: "/", maxAge: 3600 });
+    if (role === "customer") {
+      setCookie("customer_access", jwt_authorizationToken, {
+        path: "/",
+        maxAge: 3600 * 24,
+      });
+    } else
+      setCookie("admin_access", jwt_authorizationToken, {
+        path: "/",
+        maxAge: 3600,
+      });
 
     // localStorage.setItem(
     //   "user",
@@ -42,17 +52,25 @@ const AuthProvider = ({ children }) => {
   };
 
   const logOut = () => {
-    setLoading(false);
-    removeCookie("jwt", { path: "/" });
+    setLoading(true);
+    if (user && user.role === "customer") {
+      removeCookie("customer_access", { path: "/" });
+    } else {
+      removeCookie("admin_access", { path: "/" });
+    }
     // localStorage.removeItem("user");
-    return setUser(null);
+    setUser(null);
+    return setLoading(false);
   };
+
+  const isLoggedIn = user && user.role === "customer";
 
   const authInfo = {
     user,
     loading,
     login,
     logOut,
+    isLoggedIn,
   };
 
   return (

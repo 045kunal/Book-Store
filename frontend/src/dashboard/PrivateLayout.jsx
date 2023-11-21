@@ -6,14 +6,14 @@ import { useCookies } from "react-cookie";
 
 const PrivateLayout = () => {
   const { user, loading } = useAuth();
-  const [cookies] = useCookies(["jwt"]);
+  const [cookies] = useCookies(["admin_access"]);
   // console.log("cookies: ", cookies);
 
   useEffect(() => {
     // const _user = localStorage.getItem("user");
     // console.log("user", user);
     // console.log("cookies: ", cookies);
-    if (!user && !cookies.jwt) {
+    if (!user && !cookies.admin_access) {
       window.location.href = "/login";
     }
   }, [user, cookies]);

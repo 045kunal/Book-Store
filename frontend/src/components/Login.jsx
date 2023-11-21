@@ -1,10 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthProvider";
-
-// import { AuthContext } from "../contexts/AuthProvider";
-// import googleLogo from "../assets/google-logo.svg";
-// import fbLogo from "../assets/facebook-log.svg";
+import { jwtDecode } from "jwt-decode";
 
 export default function Login() {
   const [ErrorMessage, setErrorMessage] = useState("");
@@ -19,7 +16,6 @@ export default function Login() {
     const form = event.target;
     const username = form.username.value;
     const password = form.password.value;
-    // console.log(username, password);
 
     const userObj = {
       username,
@@ -38,34 +34,23 @@ export default function Login() {
       if (res.status === 401 || res.status === 400) {
         const data = await res.json();
         const errorMessage = data.error;
-        // console.log(errorMessage);
         setErrorMessage(errorMessage);
       } else {
+        const data = await res.json();
+        const token = data.accessToken;
+        login(token);
         alert("Login successful....");
 
-        const data = await res.json();
-        // console.log("data: ", data);
+        const DecodedToken = jwtDecode(token);
+        const role = DecodedToken.role;
 
-        const token = data.accessToken;
-
-        login(token);
-        navigate(from, { replace: true });
+        if (role === "customer") {
+          navigate("/", { replace: true });
+        } else {
+          navigate(from, { replace: true });
+        }
       }
     });
-
-    // login(username, password)
-    //   .then((result) => {
-    //     // Signed in
-    //     const user = result.user;
-    //     console.log(user);
-    //     alert("Login successful!");
-    //     navigate(from, { replace: true });
-    //     // ...
-    //   })
-    //   .catch((error) => {
-    //     const errorMessage = error.message;
-    //     setErrorMessage(errorMessage);
-    //   });
   };
 
   return (
@@ -76,7 +61,7 @@ export default function Login() {
           <div className="max-w-md mx-auto">
             <div>
               <h1 className="text-3xl font-semibold">
-                Please Login to Dashborad
+                Please Login to you account
               </h1>
             </div>
             <div className="divide-y divide-gray-200">
@@ -129,34 +114,18 @@ export default function Login() {
                     Login
                   </button>
                 </div>
+                <div>
+                  <p className="text-base">
+                    If you don't have an account, please &nbsp;
+                    <Link to="/sign-up" className="underline text-blue-600">
+                      Signup
+                    </Link>
+                    &nbsp; here
+                  </p>
+                </div>
               </form>
             </div>
           </div>
-
-          {/* social login */}
-          {/* <div>
-            <hr />
-            <div className="flex w-full items-center flex-col mt-5 gap-3">
-              <button onClick={handleRegister} className="block">
-                {" "}
-                <img
-                  src={googleLogo}
-                  alt=""
-                  className="w-12 h-12 inline-block"
-                />
-                Log in with Google
-              </button>
-              <button>
-                {" "}
-                <img
-                  src={fbLogo}
-                  alt=""
-                  className="w-10 h-10 inline-block mr-1"
-                />
-                Log in with Facebook
-              </button>
-            </div>
-          </div> */}
         </div>
       </div>
     </div>

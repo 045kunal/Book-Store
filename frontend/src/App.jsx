@@ -19,6 +19,7 @@ function App() {
   return (
     <>
       {/* if si login is true and role is not customer , then show navabar */}
+
       {<Navbar />}
       <div className="min-h-screen">
         <Outlet />

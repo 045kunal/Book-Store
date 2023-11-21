@@ -18,6 +18,7 @@ import UploadUser from "../dashboard/UploadUser";
 import ManageUsers from "../dashboard/ManageUsers";
 import EditUsers from "../dashboard/EditUsers";
 import Signup from "../components/Signup";
+import Cart from "../components/cart";
 
 const router = createBrowserRouter([
   {
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
         element: <SingleBook />,
         loader: ({ params }) =>
           fetch(`http://localhost:3000/book/${params.id}`),
+      },
+      {
+        path: "/cart",
+        element: <Cart />,
       },
     ],
   },

@@ -1,65 +1,46 @@
 import React, { useContext, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-// const bcrypt = require("bcrypt");
-// import { AuthContext } from "../contexts/AuthProvider";
-// import googleLogo from "../assets/google-logo.svg";
-// import fbLogo from "../assets/facebook-log.svg";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [ErrorMessage, setErrorMessage] = useState("");
-  // login with email password
+  const navigate = useNavigate();
+
   const handleSignup = (event) => {
     event.preventDefault();
     const form = event.target;
     const username = form.username.value;
     const password = form.password.value;
-    console.log(username, password);
+    const firstname = form.firstname.value;
+    const lastname = form.lastname.value;
+    const emailid = form.emailid.value;
+    const mobileno = form.mobileno.value;
 
-    var hashedpassword;
-    try {
-      hashedpassword = bcrypt.hash(password, 10);
-    } catch {
-      ctx.status = 500;
-      console.log(" error in hashing");
-      ctx.body = "Error in hashing password.";
-    }
     const userObj = {
       username,
       firstname,
       lastname,
       emailid,
-      password: hashedpassword,
-      role,
+      mobileno,
+      password,
     };
 
     fetch(`http://localhost:3000/register/`, {
-      method: "PATCH",
+      method: "POST",
 
       headers: {
         "Content-type": "application/json",
       },
 
-      body: JSON.stringify(bookObj),
+      body: JSON.stringify(userObj),
     })
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        alert("Book updated successfully!!!!");
+        alert("User registration successfully!!!!");
+        form.reset();
+        navigate("/login", { replace: true });
       });
   };
-
-  // createUser(user, password)
-  //   .then((userCredential) => {
-  //     // Signed in
-  //     const user = userCredential.user;
-  //     // ...
-  //   })
-  //   .catch((error) => {
-  //     const errorCode = error.code;
-  //     const errorMessage = error.message;
-  //     console.log(error.message);
-  //     // ..
-  //   });
 
   return (
     <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
@@ -68,43 +49,76 @@ const Signup = () => {
         <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
           <div className="max-w-md mx-auto">
             <div>
-              <h1 className="text-3xl font-semibold">
-                Please Create An Account
-              </h1>
+              <h1 className="text-3xl font-semibold">Create An Account</h1>
             </div>
             <div className="divide-y divide-gray-200">
               <form
                 onSubmit={handleSignup}
                 className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7"
               >
+                <div className="flex gap-4">
+                  <div className="relative flex-1">
+                    <input
+                      id="username"
+                      name="username"
+                      type="text"
+                      className="peer h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-rose-600"
+                      placeholder="Username"
+                      required
+                    />
+                  </div>
+                  <div className="relative flex-1">
+                    <input
+                      id="password"
+                      name="password"
+                      type="password"
+                      className="peer h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-rose-600"
+                      placeholder="Password"
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <div className="relative flex-1">
+                    <input
+                      id="firstname"
+                      name="firstname"
+                      type="text"
+                      className="peer h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-rose-600"
+                      placeholder="First Name"
+                      required
+                    />
+                  </div>
+                  <div className="relative flex-1">
+                    <input
+                      id="lastname"
+                      name="lastname"
+                      type="text"
+                      className="peer h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-rose-600"
+                      placeholder="Last Name"
+                      required
+                    />
+                  </div>
+                </div>
                 <div className="relative">
                   <input
-                    id="username"
-                    name="username"
-                    type="text"
-                    className="peer h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:borer-rose-600"
-                    placeholder="User name"
+                    id="emailid"
+                    name="emailid"
+                    type="email"
+                    className="peer h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-rose-600"
+                    placeholder="Email Address"
                     required
                   />
                 </div>
                 <div className="relative">
                   <input
-                    id="password"
-                    name="password"
-                    type="password"
-                    className="peer h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:borer-rose-600"
-                    placeholder="Password"
+                    id="mobileno"
+                    name="mobileno"
+                    type="tel"
+                    className="peer h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-rose-600"
+                    placeholder="Mobile Number"
                     required
                   />
-                </div>
-                <div>
-                  <p className="text-base">
-                    If you have an account. Please{" "}
-                    <Link to="/login" className="underline text-blue-600">
-                      Login Now
-                    </Link>{" "}
-                    here
-                  </p>
                 </div>
                 <div className="relative">
                   <button
@@ -114,34 +128,18 @@ const Signup = () => {
                     Sign up
                   </button>
                 </div>
+                <div>
+                  <p className="text-base">
+                    If you have an account, please &nbsp;
+                    <Link to="/login" className="underline text-blue-600">
+                      Login Now
+                    </Link>
+                    &nbsp; here
+                  </p>
+                </div>
               </form>
             </div>
           </div>
-
-          {/* social login */}
-          {/* <div>
-            <hr />
-            <div className="flex w-full items-center flex-col mt-5 gap-3">
-              <button onClick={handleRegister} className="block">
-                {" "}
-                <img
-                  src={googleLogo}
-                  alt=""
-                  className="w-12 h-12 inline-block"
-                />
-                Log in with Google
-              </button>
-              <button>
-                {" "}
-                <img
-                  src={fbLogo}
-                  alt=""
-                  className="w-10 h-10 inline-block mr-1"
-                />
-                Log in with Facebook
-              </button>
-            </div>
-          </div> */}
         </div>
       </div>
     </div>

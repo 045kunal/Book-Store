@@ -1,23 +1,69 @@
-import React from "react";
-import { useLoaderData } from "react-router-dom";
+import { toast } from "react-toastify";
+import React, { useState } from "react";
+import { Link, useLoaderData } from "react-router-dom";
 
 const SingleBook = () => {
   const {
+    _id,
     title,
     authors,
-    genres,
+    categories,
     price,
     inventory,
     shortDescription,
     longDescription,
     imageLink,
   } = useLoaderData();
+  // categories.toString();
+  // console.log("genres", genres);
+
+  const [quantity, setQuantity] = useState(1);
+
+  const handleIncreaseQuantity = () => {
+    if (quantity < inventory) {
+      setQuantity(quantity + 1);
+    }
+  };
+
+  const handleDecreaseQuantity = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
+    }
+  };
+
+  const handleAddToCart = (e) => {
+    const productInfo = {
+      _id,
+      title,
+      authors,
+      categories,
+      price,
+      inventory,
+      quantity,
+      imageLink,
+    };
+
+    const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    const existingProductIndex = existingCart.findIndex(
+      (item) => item._id === _id
+    );
+
+    if (existingProductIndex !== -1) {
+      existingCart[existingProductIndex].quantity = quantity;
+    } else {
+      existingCart.push(productInfo);
+    }
+    localStorage.setItem("cart", JSON.stringify(existingCart));
+
+    toast.success("Added to Cart!");
+  };
 
   return (
     <div className="mt-32 px-4 lg:px-24">
       <div className="flex">
-        {/* Left side for image */}
-        <div className="w-1/2 pr-8 h-1/4">
+        {/* Left side for image  */}
+        <div className="w-1/2 h-1/2">
           <img src={imageLink} alt={title} className="w-1/2 h-1/4" />
         </div>
 
@@ -30,7 +76,7 @@ const SingleBook = () => {
           </p>
           <p className="mb-2">
             <strong>Genres: </strong>
-            {genres}
+            {categories}
           </p>
           <p className="mb-2">
             <strong>Price: </strong>${price}
@@ -44,6 +90,39 @@ const SingleBook = () => {
             {shortDescription}
           </p>
           <p>{longDescription}</p>
+          <div className="flex gap-12 items-center mt-10">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={handleDecreaseQuantity}
+                className="bg-amber-400 text-white rounded px-3 py-1"
+              >
+                -
+              </button>
+              <span>{quantity}</span>
+              <button
+                onClick={handleIncreaseQuantity}
+                className="bg-amber-400 text-white rounded px-3 py-1"
+              >
+                +
+              </button>
+            </div>
+            <div className="flex gap-4">
+              <button
+                onClick={handleAddToCart}
+                className="bg-green-500 text-white rounded px-4 py-2"
+              >
+                Add to Cart
+              </button>
+              <Link to="/cart">
+                <button
+                  // onClick={handleCheckout}
+                  className="bg-orange-500 text-white rounded px-4 py-2"
+                >
+                  Checkout
+                </button>
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </div>

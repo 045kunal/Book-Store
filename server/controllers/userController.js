@@ -40,11 +40,11 @@ const userController = {
         const userrole = roleobj.role;
 
         //checking if he is a customer
-        if (userrole === "customer") {
-          ctx.status = 401;
-          ctx.body = { error: "Unauthorized" };
-          return;
-        }
+        // if (userrole === "customer") {
+        //   ctx.status = 401;
+        //   ctx.body = { error: "Unauthorized" };
+        //   return;
+        // }
 
         const tokenPayload = {
           username,
@@ -83,8 +83,14 @@ const userController = {
   },
 
   register: async (ctx) => {
-    const { username, firstname, lastname, emailid, mobileno, password, role } =
+    const { username, firstname, lastname, emailid, mobileno, password } =
       ctx.request.body;
+
+    var { role } = ctx.request.body;
+
+    if (!role) {
+      role = "customer";
+    }
 
     if (
       !firstname ||
