@@ -14,8 +14,6 @@ const SingleBook = () => {
     longDescription,
     imageLink,
   } = useLoaderData();
-  // categories.toString();
-  // console.log("genres", genres);
 
   const [quantity, setQuantity] = useState(1);
 
@@ -31,7 +29,7 @@ const SingleBook = () => {
     }
   };
 
-  const handleAddToCart = (e) => {
+  const handleAddToCart = () => {
     const productInfo = {
       _id,
       title,
@@ -54,8 +52,11 @@ const SingleBook = () => {
     } else {
       existingCart.push(productInfo);
     }
-    localStorage.setItem("cart", JSON.stringify(existingCart));
 
+    const userId = localStorage.getItem("userId");
+    const cartKey = `cart_${userId}`;
+
+    localStorage.setItem(cartKey, JSON.stringify(existingCart));
     toast.success("Added to Cart!");
   };
 
@@ -115,7 +116,6 @@ const SingleBook = () => {
               </button>
               <Link to="/cart">
                 <button
-                  // onClick={handleCheckout}
                   className="bg-orange-500 text-white rounded px-4 py-2"
                 >
                   Checkout
