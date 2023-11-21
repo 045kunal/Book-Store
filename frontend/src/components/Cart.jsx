@@ -10,8 +10,8 @@ const Cart = () => {
   };
 
   const getCartKey = () => {
-    const userid = getUserId();
-    return `cart_${userid}`;
+    const userId = getUserId();
+    return `cart_${userId}`;
   };
 
   const getCart = () => {
@@ -19,31 +19,31 @@ const Cart = () => {
     const cartWithCartKey = JSON.parse(localStorage.getItem(cartKey)) || [];
     return cartWithCartKey;
   };
+
   const handleDecreaseQuantity = (itemId) => {
     const cartWithCartKey = getCart();
 
     const updatedCart = cartWithCartKey?.map((item) => {
-      if (item._id === itemId && item.quantity < item.inventory - 1) {
+      if (item._id === itemId && item.quantity > 1) {
         return { ...item, quantity: item.quantity - 1 };
       }
       return item;
     });
 
-    localStorage.setItem(`cartWithCartKey`, JSON.stringify(updatedCart));
+    localStorage.setItem(getCartKey(), JSON.stringify(updatedCart));
   };
 
   const handleIncreaseQuantity = (itemId) => {
     const cartWithCartKey = getCart();
-    console.log("cartWithCartKey: ", cartWithCartKey);
 
     const updatedCart = cartWithCartKey?.map((item) => {
-      if (item._id === itemId && item.quantity < item.inventory - 1) {
+      if (item._id === itemId && item.quantity < item.inventory) {
         return { ...item, quantity: item.quantity + 1 };
       }
       return item;
     });
 
-    localStorage.setItem(`cartWithCartKey`, JSON.stringify(updatedCart));
+    localStorage.setItem(getCartKey(), JSON.stringify(updatedCart));
   };
 
   const handleRemoveItem = (itemId) => {
@@ -51,13 +51,19 @@ const Cart = () => {
 
     const updatedCart = cartWithCartKey.filter((item) => item._id !== itemId);
 
-    localStorage.setItem(`cartWithCartKey`, JSON.stringify(updatedCart));
+    localStorage.setItem(getCartKey(), JSON.stringify(updatedCart));
   };
 
+  const cart = getCart();
   const totalAmount = cart.reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
+
+  const goToPayment = () => {
+    // Implement your logic to navigate to the payment page
+  };
+
 
   return (
     <div className="container mx-auto mt-10 p-4">
@@ -96,7 +102,7 @@ const Cart = () => {
             </div>
           ))}
           <div className="mt-4">
-            <p className="font-semibold">Total: {totalAmount}</p>
+            <p className="font-semibold">Total: ${totalAmount.toFixed(2)}</p>
             <button onClick={() => goToPayment()}>Proceed to Payment</button>
           </div>
         </div>
