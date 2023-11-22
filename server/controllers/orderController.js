@@ -39,6 +39,29 @@ const orderController = {
       (ctx.status = 500), (ctx.body = { error: "Internal server error" });
     }
   },
+
+  updateOrderStatus : async (ctx) => {
+    const { orderId } = ctx.params.id;
+    const { status } = ctx.body;
+  
+    try {
+      const updatedOrder = await Order.findByIdAndUpdate(
+        orderId,
+        { orderStatus: status },
+        { new: true }
+      );
+  
+      if (!updatedOrder) {
+        ctx.status = 404;
+        ctx.body = {error: "Order not found"};
+      }
+  
+      ctx.body = updatedOrder;
+    } catch (error) {
+      ctx.status = 500;
+      ctx.body = {error: "Internal server error"};
+    }
+  },
 };
 
 module.exports = orderController;

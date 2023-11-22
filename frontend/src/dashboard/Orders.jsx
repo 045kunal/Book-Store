@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const Orders = () => {
   const [allOrders, setOrders] = useState([]);
-  const [status, setStatus] = useState();
+  const [selectedStatus, setSelectedStatus] = useState({});
   useEffect(() => {
     fetch(`http://localhost:3000/orders`)
       .then((res) => res.json())
@@ -13,6 +13,37 @@ const Orders = () => {
       });
   }, []);
   console.log(allOrders);
+
+  const handleChangeStatus = (orderId, newStatus) => {
+    setSelectedStatus((prevStatus) => ({
+      ...prevStatus,
+      [orderId]: newStatus,
+    }));
+  };
+
+  const handleSaveStatus = (orderId) => {
+    const newStatus = selectedStatus[orderId];
+
+    // Perform the API request to update the order status
+    fetch(`http://localhost:3000/updateOrder/${orderId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ status: newStatus }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        // Handle successful status update
+        console.log(`Order ${orderId} status updated to ${newStatus}`);
+      })
+      .catch((error) => {
+        // Handle error
+        console.error('Error updating order status:', error);
+      });
+  };
+
+
   return (
     <div className="px-4 my-12">
       <h2 className="mb-8 text-3xl font-bold">Manage and update Orders!</h2>
@@ -40,24 +71,21 @@ const Orders = () => {
               <Table.Cell>{order.orderAddress}</Table.Cell>
               <Table.Cell>
                 <Select
-                  id="status"
-                  value={selectedUserRole}
-                  onChange={handleChangeSelectedValue}
-                  type="text"
-                  name="status"
+                  value={selectedStatus[order._id] || ""}
+                  onChange={(e) => handleChangeStatus(order._id, e.target.value)}
                   className="w-full rounded"
                 >
-                  {userRole.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
+                  <option value="Pending">Pending</option>
+                  <option value="Confirmed">Confirmed</option>
+                  <option value="Out for delivery">Out for delivery</option>
+                  <option value="Completed">Completed</option>
                 </Select>
               </Table.Cell>
+
               <Table.Cell>
                 <button
                   className="bg-green-600 px-4 py-1 font-semibold text-white rounded-sm hover:bg-sky-600"
-                  onClick={() => handleChange(order._id)}
+                  onClick={() => handleSaveStatus(order._id)}
                 >
                   Confirm
                 </button>
