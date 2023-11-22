@@ -1,36 +1,53 @@
-// Checkout.jsx
-
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useLoaderData } from "react-router-dom";
 
 const Checkout = () => {
-  const history = useHistory();
+  const user = useLoaderData();
 
   const [userAddress, setUserAddress] = useState("");
   const [isOrderButtonEnabled, setIsOrderButtonEnabled] = useState(false);
 
   useEffect(() => {
-    // Check if the user has a saved address
-    // If yes, set the userAddress state
-    // Example: setUserAddress(getUserSavedAddress());
+    const userAddress = user?.address;
+    userAddress ? setUserAddress(userAddress) : "";
   }, []);
 
   const handleUseAddress = (address) => {
     setUserAddress(address);
-    setIsOrderButtonEnabled(true);
+    const id = user.userid;
+
+    fetch(`http://localhost:3000/updateAddress/${id}`, {
+      method: "PATCH",
+
+      headers: {
+        "Content-type": "application/json",
+      },
+
+      body: JSON.stringify({ address }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        // console.log(data);
+        if (data.error) {
+          alert(data.error);
+          return;
+        }
+        // alert("User updated successfully!!!!");
+        setIsOrderButtonEnabled(true);
+      });
   };
 
   const handleMakeOrder = () => {
-    // Perform order processing logic
     alert("Order placed successfully!");
     // Redirect to a confirmation page or any other desired route
-    history.push("/order-confirmation");
   };
 
   return (
-    <div className="max-w-md mx-auto mt-8 p-4 border border-gray-300 rounded">
-      <h2 className="text-2xl font-bold mb-4">Checkout</h2>
+    // container mx-auto mt-32 lg:px-2 p-4
+    <div className="mx-auto mt-32 lg:px-2 p-4 w-1/2">
+      <h1 className="text-2xl font-bold mb-4 flex justify-center">Checkout</h1>
       <div>
+        <p>Your address</p>
         <textarea
           value={userAddress}
           onChange={(e) => setUserAddress(e.target.value)}

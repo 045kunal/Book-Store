@@ -7,7 +7,6 @@ import { useCookies } from "react-cookie";
 const PrivateLayout = () => {
   const { user, loading } = useAuth();
   const [cookies] = useCookies(["admin_access"]);
-  // console.log("cookies: ", cookies);
 
   useEffect(() => {
     // const _user = localStorage.getItem("user");
@@ -17,7 +16,6 @@ const PrivateLayout = () => {
       window.location.href = "/login";
     }
   }, [user, cookies]);
-  // show sidebar on basic of user role
   return (
     <div className="flex gap-4 flex-col md:flex-row">
       <div>

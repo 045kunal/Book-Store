@@ -15,12 +15,8 @@ import { jwtDecode } from "jwt-decode";
 
 export const SideBar = () => {
   const { user } = useAuth();
-  // console.log("user: ", user);
-  // const decodedUser = jwtDecode(user);
   function getUserRole() {
     try {
-      // console.log("decodedUser:", decodedUser);
-      // return JSON.parse(decodedUser)?.role;
       return user?.role;
     } catch (error) {
       return user?.role;
@@ -70,10 +66,10 @@ export const SideBar = () => {
     },
 
     {
-      id: "product",
-      link: "#",
+      id: "orders",
+      link: "/admin/dashboard/orders",
       icon: HiChartPie,
-      displayText: "Products",
+      displayText: "Orders",
     },
   ].concat(
     getUserRole() === "admin" ? [...adminRoutes, ...commonRoutes] : commonRoutes

@@ -73,6 +73,7 @@ const AuthProvider = ({ children }) => {
     login,
     logOut,
     isLoggedIn,
+    cookies,
   };
 
   return (

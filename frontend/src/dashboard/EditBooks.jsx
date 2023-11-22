@@ -197,27 +197,22 @@ const EditBooks = () => {
 
           <div className="lg:w-1/2">
             <div className="mb-2 block">
-              <Label htmlFor="status" value="Book Status" />
+              <Label htmlFor="imageLink" value="Book Image Link" />
             </div>
-            <Select
-              id="status"
-              value={selectedBookStatus}
-              onChange={handleChangeSelectedValue}
+            <TextInput
+              id="imageLink"
+              placeholder="Paste Book Image Link"
+              required
               type="text"
-              name="status"
-              className="w-full rounded"
-            >
-              {bookStatus.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </Select>
+              name="imageLink"
+              className="w-full"
+              defaultValue={formData.imageLink}
+            />
           </div>
         </div>
 
         <div className="flex gap-8">
-          <div className="lg:w-1/2">
+          <div className="lg:w-1/3">
             <div className="mb-2 block">
               <Label htmlFor="price" value="Book Price (In Dollars)" />
             </div>
@@ -233,7 +228,7 @@ const EditBooks = () => {
             />
           </div>
 
-          <div className="lg:w-1/2">
+          <div className="lg:w-1/3">
             <div className="mb-2 block">
               <Label htmlFor="inventory" value="Book Quantity" />
             </div>
@@ -245,21 +240,6 @@ const EditBooks = () => {
               name="inventory"
               className="w-full"
               defaultValue={formData.inventory}
-            />
-          </div>
-
-          <div className="lg:w-1/2">
-            <div className="mb-2 block">
-              <Label htmlFor="imageLink" value="Book Image Link" />
-            </div>
-            <TextInput
-              id="imageLink"
-              placeholder="Paste Book Image Link"
-              required
-              type="text"
-              name="imageLink"
-              className="w-full"
-              defaultValue={formData.imageLink}
             />
           </div>
         </div>

@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthProvider";
+import { Link } from "react-router-dom";
 
 const Cart = () => {
   const { user } = useAuth();
   const [cart, setCart] = useState([]);
 
   const getUserId = () => {
-    const userId = user.userid;
+    const userId = user?.userid;
     return userId;
   };
 
@@ -20,6 +21,12 @@ const Cart = () => {
     const cartWithCartKey = JSON.parse(localStorage.getItem(cartKey)) || [];
     setCart(cartWithCartKey);
     return cartWithCartKey;
+  };
+
+  const updateCart = (updatedCart) => {
+    const cartKey = getCartKey();
+    localStorage.setItem(cartKey, JSON.stringify(updatedCart));
+    setCart(updatedCart);
   };
 
   const handleDecreaseQuantity = (itemId) => {
@@ -49,26 +56,21 @@ const Cart = () => {
     updateCart(updatedCart);
   };
 
-  const updateCart = (updatedCart) => {
-    const userId = getUserId();
-    const cartKey = `cart_${userId}`;
-    localStorage.setItem(cartKey, JSON.stringify(updatedCart));
-    setCart(updatedCart);
-  };
-
   const totalAmount = cart.reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
-  
-  const goToPayment = () => {
-    // Implement your logic to navigate to the payment page
-  };
 
+  useEffect(() => {
+    const initialCart = getCart() ? getCart() : cart;
+    setCart(initialCart);
+  }, []);
+
+  const goToPayment = () => {};
 
   return (
-    <div className="container mx-auto mt-10 p-4">
-      <h1 className="text-2xl font-bold mb-4">Your Cart</h1>
+    <div className="container mx-auto mt-32 lg:px-2 p-4">
+      <h1 className="text-2xl font-bold mb-4 justify-center flex">Your Cart</h1>
       {cart.length === 0 ? (
         <p>Your cart is empty.</p>
       ) : (
@@ -78,7 +80,7 @@ const Cart = () => {
               <img
                 src={item.imageLink}
                 alt={item.title}
-                className="w-20 h-32 object-cover mr-4"
+                className="w-24 h-36 object-cover mr-4"
               />
               <div className="flex-1">
                 <h2 className="text-lg font-semibold">{item.title}</h2>
@@ -104,7 +106,14 @@ const Cart = () => {
           ))}
           <div className="mt-4">
             <p className="font-semibold">Total: ${totalAmount.toFixed(2)}</p>
-            <button onClick={() => goToPayment()}>Proceed to Payment</button>
+            <Link to={`/checkout/${user.userid}`}>
+              <button
+                onClick={() => goToPayment()}
+                className="bg-green-500 text-white rounded px-4 py-2"
+              >
+                Proceed to Buy
+              </button>
+            </Link>
           </div>
         </div>
       )}

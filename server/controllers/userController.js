@@ -405,6 +405,7 @@ const userController = {
             mobileno: { $first: "$mobileno" },
             password: { $first: "$password" },
             userRoles: { $push: "$userRoles" },
+            address: { $first: "$address" },
           },
         },
         {
@@ -416,6 +417,7 @@ const userController = {
             emailid: 1,
             mobileno: 1,
             password: 1,
+            address: 1,
             userRoles: {
               $cond: {
                 if: { $eq: [{ $size: "$userRoles" }, 0] },
@@ -437,6 +439,7 @@ const userController = {
             emailid: result[0].emailid,
             mobileno: result[0].mobileno,
             password: result[0].password,
+            address: result[0].address,
             userRoles: result[0].userRoles[0].role.role,
           };
           ctx.body = userDetail;
@@ -445,6 +448,26 @@ const userController = {
     } catch (error) {
       ctx.status = 500;
       ctx.body = { error: "Internal Server Error" };
+    }
+  },
+  updateAddress: async (ctx) => {
+    const id = ctx.params.id;
+    const { address } = ctx.request.body;
+    try {
+      const updatedUser = await User.findByIdAndUpdate(
+        id,
+        { address: address },
+        { new: true }
+      );
+      if (!updatedUser) {
+        (ctx.status = 404), (ctx.body = { error: "user not found" });
+        return;
+      }
+      ctx.status = 200;
+      ctx.body = updatedUser;
+    } catch (error) {
+      ctx.status = 500;
+      ctx.body = { error: "Internal server error" };
     }
   },
 };

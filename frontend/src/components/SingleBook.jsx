@@ -1,6 +1,8 @@
 import { toast } from "react-toastify";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLoaderData } from "react-router-dom";
+import { useAuth } from "../contexts/AuthProvider";
+import BookCards from "./BookCards";
 
 const SingleBook = () => {
   const {
@@ -16,6 +18,15 @@ const SingleBook = () => {
   } = useLoaderData();
 
   const [quantity, setQuantity] = useState(1);
+  const { user } = useAuth();
+
+  const [books, setBooks] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:3000/all-books")
+      .then((res) => res.json())
+      .then((data) => setBooks(data.slice(0, 10)));
+  }, []);
 
   const handleIncreaseQuantity = () => {
     if (quantity < inventory) {
@@ -40,8 +51,10 @@ const SingleBook = () => {
       quantity,
       imageLink,
     };
+    const userId = user.userid;
+    const cartKey = `cart_${userId}`;
 
-    const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
+    const existingCart = JSON.parse(localStorage.getItem(cartKey)) || [];
 
     const existingProductIndex = existingCart.findIndex(
       (item) => item._id === _id
@@ -52,9 +65,6 @@ const SingleBook = () => {
     } else {
       existingCart.push(productInfo);
     }
-
-    const userId = localStorage.getItem("userId");
-    const cartKey = `cart_${userId}`;
 
     localStorage.setItem(cartKey, JSON.stringify(existingCart));
     toast.success("Added to Cart!");
@@ -115,16 +125,15 @@ const SingleBook = () => {
                 Add to Cart
               </button>
               <Link to="/cart">
-                <button
-                  className="bg-orange-500 text-white rounded px-4 py-2"
-                >
-                  Checkout
+                <button className="bg-orange-500 text-white rounded px-4 py-2">
+                  Go to Cart
                 </button>
               </Link>
             </div>
           </div>
         </div>
       </div>
+      <BookCards books={books} headline="Other Books" />
     </div>
   );
 };

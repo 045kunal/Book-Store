@@ -59,14 +59,13 @@ const ManageBooks = () => {
     //     </tbody>
     //   </table>
     <div className="px-4 my-12">
-      <h2 className="mb-8 text-3xl font-bold">Manager Your Books Inventory!</h2>
+      <h2 className="mb-8 text-3xl font-bold">Manage Your Books Inventory!</h2>
 
       <Table className="lg:w-[1180px]">
         <Table.Head>
           <Table.HeadCell>No.</Table.HeadCell>
           <Table.HeadCell>Book name</Table.HeadCell>
           <Table.HeadCell>Authors Name</Table.HeadCell>
-          <Table.HeadCell>Status</Table.HeadCell>
           <Table.HeadCell>Price</Table.HeadCell>
           <Table.HeadCell>Edit or Manage</Table.HeadCell>
         </Table.Head>
@@ -81,7 +80,6 @@ const ManageBooks = () => {
                 {book.title}
               </Table.Cell>
               <Table.Cell>{book.authors.join(", ")}</Table.Cell>
-              <Table.Cell>{book.status}</Table.Cell>
               <Table.Cell>{book.price}$</Table.Cell>
               <Table.Cell>
                 <Link

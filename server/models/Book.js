@@ -24,11 +24,6 @@ const bookSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  status: {
-    type: String,
-    enum: ["added", "pending", "confirmed", "shipped", "delivered"],
-    default: "added",
-  },
   categories: [
     {
       type: String,
