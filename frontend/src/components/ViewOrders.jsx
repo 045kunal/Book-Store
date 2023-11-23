@@ -6,20 +6,14 @@ const ViewOrders = () => {
   const [orders, setOrders] = useState([]);
   const { user } = useAuth();
 
-  const fetchOrders = () => {
+  useEffect(() => {
     const userId = user?.userid;
-    console.log(userId);
     fetch(`http://localhost:3000/orders/${userId}`)
       .then((res) => res.json())
       .then((data) => {
         setOrders(data);
       });
-  };
-
-  useEffect(() => {
-    fetchOrders();
   }, [user]);
-  console.log(orders);
 
   return (
     <div className="container mx-auto mt-32 lg:px-2 p-4">
