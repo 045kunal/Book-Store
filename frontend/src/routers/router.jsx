@@ -18,9 +18,10 @@ import UploadUser from "../dashboard/UploadUser";
 import ManageUsers from "../dashboard/ManageUsers";
 import EditUsers from "../dashboard/EditUsers";
 import Signup from "../components/Signup";
-import Cart from "../components/Cart";
+import Cart from "../components/cart";
 import Checkout from "../components/Checkout";
 import Orders from "../dashboard/Orders";
+import ViewOrders from "../components/ViewOrders";
 
 const router = createBrowserRouter([
   {
@@ -58,6 +59,10 @@ const router = createBrowserRouter([
         element: <Checkout />,
         loader: ({ params }) =>
           fetch(`http://localhost:3000/user/${params.id}`),
+      },
+      {
+        path: "/my-orders",
+        element: <ViewOrders />,
       },
     ],
   },

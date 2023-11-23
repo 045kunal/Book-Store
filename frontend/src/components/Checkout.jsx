@@ -14,7 +14,7 @@ const Checkout = () => {
 
   const handleUseAddress = (address) => {
     setUserAddress(address);
-    const id = user.userid;
+    const id = user?._id;
 
     fetch(`http://localhost:3000/updateAddress/${id}`, {
       method: "PATCH",
@@ -38,32 +38,42 @@ const Checkout = () => {
   };
 
   const handleMakeOrder = () => {
+    const userId = user?._id;
+    const cartKey = `cart_${userId}`;
+    const cart = JSON.parse(localStorage.getItem(cartKey));
+
+    var orderAmount = 0;
+    cart.forEach((item) => {
+      orderAmount += item.price * item.quantity;
+    });
+
     const orderData = {
-        user: user.userid,
-        books: [],
-        orderAmount: 0,
-        orderAddress: userAddress,
-      };
-    
-      fetch(`http://localhost:3000/createOrder`, {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify(orderData),
+      user: user?._id,
+      books: cart,
+      orderAmount: orderAmount,
+      orderAddress: userAddress,
+    };
+
+    fetch(`http://localhost:3000/createOrder`, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(orderData),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          alert(`Error creating order: ${data.error}`);
+        } else {
+          alert("Order placed successfully!");
+          localStorage.removeItem(cartKey);
+        }
       })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.error) {
-            alert(`Error creating order: ${data.error}`);
-          } else {
-            alert("Order placed successfully!");
-          }
-        })
-        .catch((error) => {
-          console.error("Error creating order:", error);
-          alert("An error occurred while placing the order. Please try again.");
-        });
+      .catch((error) => {
+        console.error("Error creating order:", error);
+        alert("An error occurred while placing the order. Please try again.");
+      });
   };
 
   return (

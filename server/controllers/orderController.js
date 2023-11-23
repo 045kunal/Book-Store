@@ -29,9 +29,9 @@ const orderController = {
   },
 
   getOrdersByCustomerId: async (ctx) => {
-    const { userid } = ctx.params.id;
+    const userid = ctx.params.id;
     try {
-      const orders = await Order.find({ userid });
+      const orders = await Order.find({ user: userid });
       ctx.status = 200;
       ctx.body = orders;
     } catch (errror) {
