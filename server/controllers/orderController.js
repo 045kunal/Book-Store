@@ -32,7 +32,6 @@ const orderController = {
     const { userid } = ctx.params.id;
     try {
       const orders = await Order.find({ userid });
-      console.log(orders);
       ctx.status = 200;
       ctx.body = orders;
     } catch (errror) {
@@ -40,26 +39,26 @@ const orderController = {
     }
   },
 
-  updateOrderStatus : async (ctx) => {
-    const { orderId } = ctx.params.id;
-    const { status } = ctx.body;
-  
+  updateOrderStatus: async (ctx) => {
+    const orderId = ctx.params.id;
+    const { status } = ctx.request.body;
+
     try {
       const updatedOrder = await Order.findByIdAndUpdate(
         orderId,
         { orderStatus: status },
         { new: true }
       );
-  
+
       if (!updatedOrder) {
         ctx.status = 404;
-        ctx.body = {error: "Order not found"};
+        ctx.body = { error: "Order not found" };
+        return;
       }
-  
       ctx.body = updatedOrder;
     } catch (error) {
       ctx.status = 500;
-      ctx.body = {error: "Internal server error"};
+      ctx.body = { error: "Internal server error" };
     }
   },
 };

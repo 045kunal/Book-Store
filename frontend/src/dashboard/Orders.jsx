@@ -1,6 +1,7 @@
-import { Pagination, Table } from "flowbite-react";
+import { Pagination, Select, Table } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Orders = () => {
   const [allOrders, setOrders] = useState([]);
@@ -9,10 +10,14 @@ const Orders = () => {
     fetch(`http://localhost:3000/orders`)
       .then((res) => res.json())
       .then((data) => {
+        const initialStatus = {};
+        data.forEach((order) => {
+          initialStatus[order._id] = order.orderStatus;
+        });
+        setSelectedStatus(initialStatus);
         setOrders(data);
       });
   }, []);
-  console.log(allOrders);
 
   const handleChangeStatus = (orderId, newStatus) => {
     setSelectedStatus((prevStatus) => ({
@@ -23,26 +28,22 @@ const Orders = () => {
 
   const handleSaveStatus = (orderId) => {
     const newStatus = selectedStatus[orderId];
-
-    // Perform the API request to update the order status
     fetch(`http://localhost:3000/updateOrder/${orderId}`, {
-      method: 'PATCH',
+      method: "PATCH",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ status: newStatus }),
     })
       .then((res) => res.json())
       .then((data) => {
-        // Handle successful status update
-        console.log(`Order ${orderId} status updated to ${newStatus}`);
+        // console.log(`Order ${orderId} status updated to ${newStatus}`);
+        toast.success("Status updated.");
       })
       .catch((error) => {
-        // Handle error
-        console.error('Error updating order status:', error);
+        console.error("Error updating order status:", error);
       });
   };
-
 
   return (
     <div className="px-4 my-12">
@@ -72,7 +73,9 @@ const Orders = () => {
               <Table.Cell>
                 <Select
                   value={selectedStatus[order._id] || ""}
-                  onChange={(e) => handleChangeStatus(order._id, e.target.value)}
+                  onChange={(e) =>
+                    handleChangeStatus(order._id, e.target.value)
+                  }
                   className="w-full rounded"
                 >
                   <option value="Pending">Pending</option>

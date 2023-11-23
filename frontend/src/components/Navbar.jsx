@@ -39,7 +39,6 @@ const Navbar = () => {
   ];
 
   const { user, isLoggedIn, cookies } = useAuth();
-  console.log(user);
   return (
     <header className="w-full bg-transparent fixed top-0 left-0 right-0 transition-all ease-in duration-300">
       <nav

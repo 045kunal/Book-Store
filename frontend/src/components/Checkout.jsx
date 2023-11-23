@@ -39,7 +39,6 @@ const Checkout = () => {
 
   const handleMakeOrder = () => {
     alert("Order placed successfully!");
-    // Redirect to a confirmation page or any other desired route
   };
 
   return (
