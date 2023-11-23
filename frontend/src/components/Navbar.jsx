@@ -82,20 +82,27 @@ const Navbar = () => {
               </>
             )}
             {isLoggedIn && (
-              <div className="relative group">
+              <div className="group">
                 <div className="align-middle">
                   <button
                     onClick={toggleMenu}
                     className="bg-white text-black p-2 rounded-full focus:outline-none"
                   >
-                    <img src="/src/assets/user.png" className="h-5 w-5" />
+                    <img
+                      src="/src/assets/user.png"
+                      className="h-5 w-5 inline-block"
+                    />
+                    <img
+                      src="/src/assets/down-arrow.png"
+                      className="h-5 w-5 inline-block"
+                    />
                   </button>
                   <p>{user.username}</p>
                 </div>
                 <div
                   className={`${
                     isMenuOpen ? "block" : "hidden"
-                  } absolute top-10 right-0 space-y-2 bg-blue-700 p-2 rounded-md`}
+                  } absolute top-15 right-16 space-y-2 bg-blue-600 p-2 rounded-md`}
                 >
                   <Link
                     to="/profile"
@@ -109,7 +116,14 @@ const Navbar = () => {
                     className="block text-white hover:text-gray-500"
                     onClick={toggleMenu}
                   >
-                    Cart
+                    View Cart
+                  </Link>
+                  <Link
+                    to="/my-orders"
+                    className="block text-white hover:text-gray-500"
+                    onClick={toggleMenu}
+                  >
+                    View Orders
                   </Link>
                   <Link
                     to="/logout"
