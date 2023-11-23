@@ -18,7 +18,7 @@ import UploadUser from "../dashboard/UploadUser";
 import ManageUsers from "../dashboard/ManageUsers";
 import EditUsers from "../dashboard/EditUsers";
 import Signup from "../components/Signup";
-import Cart from "../components/cart";
+import Cart from "../components/Cart";
 import Checkout from "../components/Checkout";
 import Orders from "../dashboard/Orders";
 

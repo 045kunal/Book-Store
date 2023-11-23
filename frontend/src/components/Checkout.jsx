@@ -38,7 +38,32 @@ const Checkout = () => {
   };
 
   const handleMakeOrder = () => {
-    alert("Order placed successfully!");
+    const orderData = {
+        user: user.userid,
+        books: [],
+        orderAmount: 0,
+        orderAddress: userAddress,
+      };
+    
+      fetch(`http://localhost:3000/createOrder`, {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(orderData),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.error) {
+            alert(`Error creating order: ${data.error}`);
+          } else {
+            alert("Order placed successfully!");
+          }
+        })
+        .catch((error) => {
+          console.error("Error creating order:", error);
+          alert("An error occurred while placing the order. Please try again.");
+        });
   };
 
   return (
