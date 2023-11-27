@@ -10,7 +10,7 @@ import {
 import { useLoaderData, useParams } from "react-router-dom";
 
 const EditUsers = () => {
-  const userRole = ["admin", "employee", "manager", "engineer"];
+  const userRole = ["customer", "admin", "employee", "manager", "engineer"];
 
   const { id } = useParams();
   const initialFormData = useLoaderData();

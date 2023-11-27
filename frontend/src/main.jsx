@@ -16,7 +16,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <RouterProvider router={router} />
       <ToastContainer
         position="bottom-right"
-        autoClose={1000}
+        autoClose={1500}
         hideProgressBar={true}
         newestOnTop={false}
         closeOnClick

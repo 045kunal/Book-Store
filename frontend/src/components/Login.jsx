@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthProvider";
 import { jwtDecode } from "jwt-decode";
+import { toast } from "react-toastify";
 
 export default function Login() {
   const [ErrorMessage, setErrorMessage] = useState("");
@@ -39,7 +40,7 @@ export default function Login() {
         const data = await res.json();
         const token = data.accessToken;
         login(token);
-        alert("Login successful....");
+        toast.success("Login Successful.");
 
         const DecodedToken = jwtDecode(token);
         const role = DecodedToken.role;

@@ -8,6 +8,7 @@ import {
   Textarea,
 } from "flowbite-react";
 import { useLoaderData, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const EditBooks = () => {
   const bookStatus = ["added", "pending", "confirmed", "shipped", "delivered"];
@@ -54,7 +55,7 @@ const EditBooks = () => {
           alert(data.error);
           return;
         }
-        alert("Book updated successfully!!!!");
+        toast.success("Book Updated Successfully");
       });
   };
 

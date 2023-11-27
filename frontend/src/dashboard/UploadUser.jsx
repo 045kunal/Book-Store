@@ -1,5 +1,6 @@
 import { Label, TextInput, Button, Select } from "flowbite-react";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const UploadUser = () => {
   const userRole = ["customer", "admin", "employee", "manager", "engineer"];
@@ -51,7 +52,7 @@ const UploadUser = () => {
           alert(data.error);
           return;
         }
-        alert("User Registered successfully!!!!");
+        toast.success("User Registered successfully");
         form.reset();
       });
   };

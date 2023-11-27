@@ -8,39 +8,9 @@ import {
   TextInput,
   Textarea,
 } from "flowbite-react";
+import { toast } from "react-toastify";
 
 const UploadBook = () => {
-  // const bookCategories = [
-  //   "Fiction",
-  //   "Non-fiction",
-  //   "Mystery",
-  //   "Programming",
-  //   "Science fiction",
-  //   "Fantasy",
-  //   "Horror",
-  //   "Biography",
-  //   "Autobiography",
-  //   "History",
-  //   "Self-help",
-  //   "Business",
-  //   "Memoir",
-  //   "Poetry",
-  //   "Children's books",
-  //   "Travel",
-  //   "Religion and spirituality",
-  //   "Science",
-  //   "Art and design",
-  // ];
-
-  // const [selectedBookCategory, setSelectedBookCategory] = useState(
-  //   bookCategories[0]
-  // );
-
-  // const handleChangeSelectedValue = (event) => {
-  //   console.log(event.target.value);
-  //   setSelectedBookCategory(event.target.value);
-  // };
-
   const bookStatus = ["added", "pending", "confirmed", "shipped", "delivered"];
 
   const [selectedBookStatus, setSelectedBookStatus] = useState(bookStatus[0]);
@@ -102,7 +72,7 @@ const UploadBook = () => {
           alert(data.error);
           return;
         }
-        alert("Book updated successfully!!!!");
+        toast.success("Book updated successfully");
         form.reset();
       });
   };

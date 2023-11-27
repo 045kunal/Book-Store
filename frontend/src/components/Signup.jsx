@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Signup = () => {
   const [ErrorMessage, setErrorMessage] = useState("");
@@ -36,7 +37,7 @@ const Signup = () => {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        alert("User registration successfully!!!!");
+        toast.success("Registered Successfully.");
         form.reset();
         navigate("/login", { replace: true });
       });
