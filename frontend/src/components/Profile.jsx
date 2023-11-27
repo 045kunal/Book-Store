@@ -1,100 +1,116 @@
 import React, { useEffect, useState } from "react";
+import { Button, Label, TextInput } from "flowbite-react";
 import { useAuth } from "../contexts/AuthProvider";
 
 const Profile = () => {
   const { user } = useAuth();
   const [userData, setUserData] = useState();
   const [isEditing, setIsEditing] = useState(false);
-  const [editedUserData, setEditedUserData] = useState({});
 
   useEffect(() => {
-    const userId = user?.userid;
-    if (userId) {
-      fetch(`http://localhost:3000/user/${userId}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setUserData(data);
-        });
-    }
+    // Fetch user data from the server based on the user ID
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch(`http://localhost:3000/user/${user.userid}`);
+        const data = await response.json();
+        setUserData(data);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
   }, [user]);
 
-  const handleEditProfile = () => {
-    setIsEditing(true);
-    setEditedUserData(userData);
+  const handleEditToggle = () => {
+    setIsEditing(!isEditing);
+  };
+
+  const handleSaveChanges = () => {
+    // Implement the logic to save changes to the server
+    console.log("Changes saved:", userData);
+    // You can make a fetch request to update user data on the server
+    // ...
+
+    // After saving changes, switch back to view mode
+    setIsEditing(false);
   };
 
   const handleInputChange = (e) => {
+    // Update the user data in the state when input fields change
     const { name, value } = e.target;
-    setEditedUserData((prevData) => ({
+    setUserData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
   };
 
-  const handleSubmit = () => {
-    const userId = user?.userid;
-
-    fetch(`http://localhost:3000/userUpdate/${userId}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(editedUserData),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setUserData(data);
-        setIsEditing(false);
-      })
-      .catch((error) => {
-        console.error("Error updating profile:", error);
-      });
-  };
-
   return (
-    <div className="container mx-auto mt-8 lg:w-1/2 p-4 bg-white rounded-md shadow-md">
-      <h1 className="text-2xl font-bold mb-4">Hello, {userData?.username}</h1>
+    <div className="container mx-auto mt-32 lg:px-2 p-4 border border-zinc-400">
+      <h1 className="text-2xl font-bold mb-4 justify-begin flex">
+        Hello, {userData?.username}
+      </h1>
+
       {isEditing ? (
+        // Edit mode
         <div>
           <div className="mb-4">
-            <label className="block text-sm font-semibold mb-2">First Name:</label>
-            <input
-              type="text"
-              name="firstname"
-              value={editedUserData?.firstname || ""}
+            <Label htmlFor="username" value="Username" />
+            <TextInput
+              id="username"
+              name="username"
+              value={userData?.username}
               onChange={handleInputChange}
-              className="w-full border rounded-md p-2"
+              className="w-full"
             />
           </div>
+
           <div className="mb-4">
-            <label className="block text-sm font-semibold mb-2">Last Name:</label>
-            <input
-              type="text"
-              name="lastname"
-              value={editedUserData?.lastname || ""}
+            <Label htmlFor="firstname" value="First Name" />
+            <TextInput
+              id="firstname"
+              name="firstname"
+              value={userData?.firstname}
               onChange={handleInputChange}
-              className="w-full border rounded-md p-2"
+              className="w-full"
             />
           </div>
-          {/* Add more input fields for other user details */}
-          <button
-            onClick={handleSubmit}
-            className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
-          >
+
+          <div className="mb-4">
+            <Label htmlFor="lastname" value="Last Name" />
+            <TextInput
+              id="lastname"
+              name="lastname"
+              value={userData?.lastname}
+              onChange={handleInputChange}
+              className="w-full"
+            />
+          </div>
+
+          <div className="mb-4">
+            <Label htmlFor="emailid" value="Email Id" />
+            <TextInput
+              id="emailid"
+              name="emailid"
+              value={userData?.emailid}
+              onChange={handleInputChange}
+              className="w-full"
+            />
+          </div>
+
+          <Button onClick={handleSaveChanges} className="mt-4">
             Save Changes
-          </button>
+          </Button>
         </div>
       ) : (
+        // View mode
         <div>
-          <p className="mb-2">Email: {userData?.emailid}</p>
-          <p className="mb-2">Mobile No: {userData?.mobileno}</p>
-          {/* Display other user details */}
-          <button
-            onClick={handleEditProfile}
-            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-          >
+          <p>First Name: {userData?.firstname}</p>
+          <p>Last Name: {userData?.lastname}</p>
+          <p>Email Id: {userData?.emailid}</p>
+          <Button onClick={handleEditToggle} className="mt-4">
             Edit Profile
-          </button>
+          </Button>
         </div>
       )}
     </div>
