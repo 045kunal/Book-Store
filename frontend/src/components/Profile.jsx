@@ -1,46 +1,14 @@
-// import React, { useEffect, useState } from "react";
-// import { useAuth } from "../contexts/AuthProvider";
-
-// const Profile = () => {
-//   const { user, login } = useAuth();
-//   var userId;
-//   const [userData, setUserData] = useState();
-
-//   useEffect(() => {
-//     userId = user?.userid;
-//     if (userId) {
-//       fetch(`http://localhost:3000/user/${userId}`)
-//         .then((res) => res.json())
-//         .then((data) => {
-//           //   console.log(data);
-//           setUserData(data);
-//         });
-//     }
-//   }, []);
-//   // console.log(userData);
-//   return (
-//     <div className="container mx-auto mt-32 lg:px-2 p-4 border border-zinc-400">
-//       <h1 className="text-2xl font-bold mb-4 justify-begin flex">
-//         Hello, {userData?.username}
-//       </h1>
-//     </div>
-//   );
-// };
-
-// export default Profile;
-
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthProvider";
 
 const Profile = () => {
-  const { user, login } = useAuth();
-  var userId;
+  const { user } = useAuth();
   const [userData, setUserData] = useState();
   const [isEditing, setIsEditing] = useState(false);
   const [editedUserData, setEditedUserData] = useState({});
 
   useEffect(() => {
-    userId = user?.userid;
+    const userId = user?.userid;
     if (userId) {
       fetch(`http://localhost:3000/user/${userId}`)
         .then((res) => res.json())
@@ -48,17 +16,15 @@ const Profile = () => {
           setUserData(data);
         });
     }
-  }, []);
+  }, [user]);
 
   const handleEditProfile = () => {
     setIsEditing(true);
-    // Set the editedUserData state to the current userData
     setEditedUserData(userData);
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    // Update the editedUserData state with the new input value
     setEditedUserData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -66,7 +32,8 @@ const Profile = () => {
   };
 
   const handleSubmit = () => {
-    // Send a request to update the user data in the backend
+    const userId = user?.userid;
+
     fetch(`http://localhost:3000/userUpdate/${userId}`, {
       method: "PATCH",
       headers: {
@@ -76,9 +43,7 @@ const Profile = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        // Update the userData state with the edited data
         setUserData(data);
-        // Exit the edit mode
         setIsEditing(false);
       })
       .catch((error) => {
@@ -87,45 +52,47 @@ const Profile = () => {
   };
 
   return (
-    <div className="container mx-auto mt-32 lg:px-2 p-4 border border-zinc-400">
-      <h1 className="text-2xl font-bold mb-4 justify-begin flex">
-        Hello, {userData?.username}
-      </h1>
+    <div className="container mx-auto mt-8 lg:w-1/2 p-4 bg-white rounded-md shadow-md">
+      <h1 className="text-2xl font-bold mb-4">Hello, {userData?.username}</h1>
       {isEditing ? (
         <div>
-          {/* Input fields for editing */}
-          <div>
-            <label className="block mb-2">First Name:</label>
+          <div className="mb-4">
+            <label className="block text-sm font-semibold mb-2">First Name:</label>
             <input
               type="text"
               name="firstname"
               value={editedUserData?.firstname || ""}
               onChange={handleInputChange}
-              className="border p-2 mb-2"
+              className="w-full border rounded-md p-2"
             />
           </div>
-          <div>
-            <label className="block mb-2">Last Name:</label>
+          <div className="mb-4">
+            <label className="block text-sm font-semibold mb-2">Last Name:</label>
             <input
               type="text"
               name="lastname"
               value={editedUserData?.lastname || ""}
               onChange={handleInputChange}
-              className="border p-2 mb-2"
+              className="w-full border rounded-md p-2"
             />
           </div>
           {/* Add more input fields for other user details */}
-          <button onClick={handleSubmit} className="bg-green-500 text-white px-4 py-2 rounded">
+          <button
+            onClick={handleSubmit}
+            className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+          >
             Save Changes
           </button>
         </div>
       ) : (
         <div>
-          {/* Display user information */}
-          <p>Email: {userData?.emailid}</p>
-          <p>Mobile No: {userData?.mobileno}</p>
+          <p className="mb-2">Email: {userData?.emailid}</p>
+          <p className="mb-2">Mobile No: {userData?.mobileno}</p>
           {/* Display other user details */}
-          <button onClick={handleEditProfile} className="bg-blue-500 text-white px-4 py-2 rounded">
+          <button
+            onClick={handleEditProfile}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+          >
             Edit Profile
           </button>
         </div>
@@ -135,4 +102,3 @@ const Profile = () => {
 };
 
 export default Profile;
-
