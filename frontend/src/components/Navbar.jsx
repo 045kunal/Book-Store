@@ -70,7 +70,7 @@ const Navbar = () => {
               to="/"
               className="text-2xl font-bold text-blue-700 flex items-center gap-2"
             >
-              <FaBlog className="inline-block" /> Books
+              <FaBlog className="inline-block" /> NovelNest
             </Link>
           </div>
           <ul className="md:flex space-x-12 hidden items-center">

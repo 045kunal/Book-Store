@@ -75,7 +75,7 @@ const SingleBook = () => {
       <div className="flex">
         {/* Left side for image  */}
         <div className="w-1/2 h-1/2">
-          <img src={imageLink} alt={title} className="w-1/2 h-1/4" />
+          <img src={imageLink} alt={title} className="w-1/2 h-1/4 m-auto" />
         </div>
 
         {/* Right side for details */}
