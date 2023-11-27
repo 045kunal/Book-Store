@@ -62,9 +62,10 @@ const Cart = () => {
   );
 
   useEffect(() => {
-    const initialCart = getCart() ? getCart() : cart;
+    const initialCart = getCart();
     setCart(initialCart);
   }, []);
+  console.log("Cart: ", cart);
 
   const goToPayment = () => {};
 

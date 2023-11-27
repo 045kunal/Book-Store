@@ -10,31 +10,43 @@ export function useAuth() {
 }
 
 const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  // const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [cookies, setCookie, removeCookie] = useCookies(["jwt"]);
+  const [cookies, setCookie, removeCookie] = useCookies();
   // console.log("user:  ", user);
 
-  useEffect(() => {
-    // const _user = localStorage.getItem("user");
-    const AdminCookieValue = cookies.admin_access;
-    const CustomerCookieValue = cookies.customer_access;
-    if (AdminCookieValue || CustomerCookieValue) {
-      const decodedCookie = jwtDecode(AdminCookieValue || CustomerCookieValue);
-      const username = decodedCookie.username;
-      const role = decodedCookie.role;
-      const userid = decodedCookie.id;
-      setUser({ userid, username, role });
-    }
-    setLoading(false);
-  }, [cookies]);
+  var user;
+  // useEffect(() => {
+  // const _user = localStorage.getItem("user");
+  const AdminCookieValue = cookies.admin_access;
+  const CustomerCookieValue = cookies.customer_access;
+  if (AdminCookieValue || CustomerCookieValue) {
+    const decodedCookie = jwtDecode(AdminCookieValue || CustomerCookieValue);
+    const username = decodedCookie.username;
+    const role = decodedCookie.role;
+    const userid = decodedCookie.id;
+    user = {
+      username,
+      role,
+      userid,
+    };
+    // console.log(username, userid, role);
+    // setUser({ username, userid, role });
+  }
+  // setLoading(false);
+  // }, [cookies]);
 
   const login = (jwt_authorizationToken) => {
     const DecodedToken = jwtDecode(jwt_authorizationToken);
     const role = DecodedToken.role;
     const username = DecodedToken.username;
     const userid = DecodedToken.id;
-    setUser({ userid, username, role });
+    // setUser({ userid, username, role });
+    user = {
+      username,
+      role,
+      userid,
+    };
     if (role === "customer") {
       setCookie("customer_access", jwt_authorizationToken, {
         path: "/",
@@ -61,7 +73,8 @@ const AuthProvider = ({ children }) => {
       removeCookie("admin_access", { path: "/" });
     }
     // localStorage.removeItem("user");
-    setUser(null);
+    // setUser(null);
+    user = null;
     return setLoading(false);
   };
 

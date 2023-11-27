@@ -2,7 +2,7 @@ import { Label, TextInput, Button, Select } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 
 const UploadUser = () => {
-  const userRole = ["admin", "employee", "manager", "engineer"];
+  const userRole = ["customer", "admin", "employee", "manager", "engineer"];
   const [currentUserRole, setCurrentUserRole] = useState();
   const handleChangeSelectedValue = (event) => {
     // console.log(event.target.value);

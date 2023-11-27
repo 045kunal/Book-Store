@@ -13,12 +13,6 @@ export default function Shop() {
       .then((data) => setBooks(data));
   }, []);
 
-  // if (loading) {
-  //   return <div className="text-center mt-28">
-  //       <Spinner aria-label="Center-aligned spinner example" />
-  //   </div>
-  // }
-
   return (
     <div className="my-28 px-4 lg:px-24">
       <h2 className="text-3xl font-bold text-center mb-16 z-40">

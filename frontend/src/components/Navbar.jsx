@@ -31,6 +31,24 @@ const Navbar = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const handleClickOutsideMenu = (event) => {
+      const menu = document.getElementsByClassName("group");
+
+      if (menu && !menu.contains(event.target)) {
+        toggleMenu();
+      }
+    };
+
+    if (isMenuOpen) {
+      document.body.addEventListener("click", handleClickOutsideMenu);
+    }
+
+    return () => {
+      document.body.removeEventListener("click", handleClickOutsideMenu);
+    };
+  });
+
   const navItems = [
     { link: "Home", path: "/" },
     { link: "About", path: "/about" },
@@ -94,7 +112,9 @@ const Navbar = () => {
                     />
                     <img
                       src="/src/assets/down-arrow.png"
-                      className="h-5 w-5 inline-block"
+                      className={`h-5 w-5 inline-block ${
+                        isMenuOpen ? "transform rotate-180" : ""
+                      }`}
                     />
                   </button>
                   <p>{user.username}</p>

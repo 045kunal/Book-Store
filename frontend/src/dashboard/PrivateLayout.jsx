@@ -10,12 +10,12 @@ const PrivateLayout = () => {
 
   useEffect(() => {
     // const _user = localStorage.getItem("user");
-    // console.log("user", user);
-    // console.log("cookies: ", cookies);
+    console.log("User", user, cookies);
     if (!user && !cookies.admin_access) {
       window.location.href = "/login";
     }
   }, [user, cookies]);
+  console.log("user", user);
   return (
     <div className="flex gap-4 flex-col md:flex-row">
       <div>

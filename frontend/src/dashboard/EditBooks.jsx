@@ -16,15 +16,27 @@ const EditBooks = () => {
   const initialFormData = useLoaderData();
 
   const [formData, setFormData] = useState(initialFormData);
-  const [selectedBookStatus, setSelectedBookStatus] = useState(formData.status);
 
-  const handleChangeSelectedValue = (event) => {
-    // console.log(event.target.value);
-    setSelectedBookStatus(event.target.value);
-  };
+  // const handleChangeSelectedValue = (event) => {
+  //   // console.log(event.target.value);
+  //   setSelectedBookStatus(event.target.value);
+  // };
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    const form = event.target;
+
+    formData.imageLink = form.imageLink.value;
+    formData.inventory = form.inventory.value;
+    formData.isbn = form.isbn.value;
+    formData.language = form.language.value;
+    formData.longDescription = form.longDescription.value;
+    formData.pages = form.pages.value;
+    formData.price = form.price.value;
+    formData.publication_date = form.publication_date.value;
+    formData.publisher = form.publisher.value;
+    formData.shortDescription = form.shortDescription.value;
+    formData.title = form.title.value;
 
     fetch(`http://localhost:3000/edit-book/${id}`, {
       method: "PATCH",
@@ -57,9 +69,9 @@ const EditBooks = () => {
     }));
   };
 
-  useEffect(() => {
-    setSelectedBookStatus(formData.status);
-  }, [formData.status]);
+  // useEffect(() => {
+  //   setSelectedBookStatus(formData.status);
+  // }, [formData.status]);
 
   return (
     <div className="px-4 my-12">
