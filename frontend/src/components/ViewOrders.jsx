@@ -49,7 +49,7 @@ const ViewOrders = () => {
                   </p>
                 </div>
                 <div>
-                  <Link to={`/order-details/${order._id}`}>
+                  <Link to={`/my-orders/order_description/${order._id}`}>
                     <button className="bg-blue-500 text-white rounded px-4 py-2">
                       View Details
                     </button>

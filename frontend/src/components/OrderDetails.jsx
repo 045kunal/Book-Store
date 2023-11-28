@@ -3,16 +3,17 @@ import { Link, useParams } from "react-router-dom";
 
 const OrderDetails = () => {
   const { orderId } = useParams();
+  console.log("orderId", orderId);
   const [orderDetails, setOrderDetails] = useState(null);
 
   useEffect(() => {
-    // Fetch order details based on orderId
     fetch(`http://localhost:3000/orders/details/${orderId}`)
       .then((res) => res.json())
       .then((data) => {
         setOrderDetails(data);
       });
   }, [orderId]);
+  console.log("orderDetails: ", { orderDetails });
 
   return (
     <div className="container mx-auto mt-32 lg:px-2 p-4">

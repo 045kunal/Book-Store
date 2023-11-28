@@ -65,12 +65,10 @@ const router = createBrowserRouter([
       {
         path: "/my-orders",
         element: <ViewOrders />,
-        children: [
-          {
-            path: "/orders/:id",
-            element: <OrderDetails/>
-          }
-        ]
+      },
+      {
+        path: "/my-orders/order_description/:orderId",
+        element: <OrderDetails />,
       },
       {
         path: "/profile",
