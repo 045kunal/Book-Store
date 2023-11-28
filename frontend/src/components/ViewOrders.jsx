@@ -22,7 +22,7 @@ const ViewOrders = () => {
       </h1>
       {Array.isArray(orders) && orders.length === 0 ? (
         <div>
-          <h2>Oops, You don't have made any orders yet.</h2>
+          <h2>Oops, You haven't made any orders yet.</h2>
           <Link to="/shop">
             <button className="bg-green-500 text-white rounded px-4 py-2">
               Go to Shop

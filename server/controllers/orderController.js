@@ -61,6 +61,29 @@ const orderController = {
       ctx.body = { error: "Internal server error" };
     }
   },
+
+  getOrderDetailsById: async (ctx) => {
+      const { orderId } = ctx.params;
+  
+      try {
+        const orderDetails = await Order.findById(orderId)
+          .populate('user', 'username')
+          .populate('books._id', 'title imageLink price');
+  
+        if (!orderDetails) {
+          ctx.status = 404;
+          ctx.body = { error: 'Order not found' };
+          return;
+        }
+  
+        ctx.status = 200;
+        ctx.body = orderDetails;
+      } catch (error) {
+        console.error('Error fetching order details:', error);
+        ctx.status = 500;
+        ctx.body = { error: 'Error fetching order details' };
+      }
+  },
 };
 
 module.exports = orderController;

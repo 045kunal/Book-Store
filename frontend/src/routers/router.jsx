@@ -23,6 +23,7 @@ import Checkout from "../components/Checkout";
 import Orders from "../dashboard/Orders";
 import ViewOrders from "../components/ViewOrders";
 import Profile from "../components/Profile";
+import OrderDetails from "../components/OrderDetails";
 
 const router = createBrowserRouter([
   {
@@ -64,6 +65,12 @@ const router = createBrowserRouter([
       {
         path: "/my-orders",
         element: <ViewOrders />,
+        children: [
+          {
+            path: "/orders/:id",
+            element: <OrderDetails/>
+          }
+        ]
       },
       {
         path: "/profile",
